@@ -1,25 +1,51 @@
 //noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
+def getGitVersionName = {->
+    def stdout = new ByteArrayOutputStream()
+    exec{
+        commandLine 'git','describe','--tags'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+
+def String GitVersion = getGitVersionName()
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.2"
     defaultConfig {
+
         applicationId "com.beliyvlastelin.snakes"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
-        versionName "1.0"
+
+        GitVersion = getGitVersionName();
+        versionName  GitVersion
+
+        buildConfigField ("String", "GitVersion", '"'+GitVersion+'"' )
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}
 
+
+        }
+              debug  {
+
+        }
+
+    }
+
+
+
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
