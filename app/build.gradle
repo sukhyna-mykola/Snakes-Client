@@ -27,8 +27,13 @@ android {
         versionName  GitVersion
 
         buildConfigField ("String", "GitVersion", '"'+GitVersion+'"' )
+
+        def stringsFile = new File("app/src/main/assets/version.txt")
+        stringsFile.write(GitVersion)
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
 
         release {
@@ -38,6 +43,7 @@ android {
 
         }
               debug  {
+
 
         }
 

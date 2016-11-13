@@ -10,6 +10,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences userPref;
 
@@ -17,11 +26,13 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_CODE = 1;
 
     TextView userName;
+    public  static String VERSION_CODE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        readVerionCode();
         userName = (TextView) findViewById(R.id.menu_user_name);
         loadUserInfo();
         if (USER_NAME == null) {
@@ -29,6 +40,28 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         } else
             userName.setText(USER_NAME);
 
+    }
+    private void readVerionCode(){
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(
+                    new InputStreamReader(this.getAssets().open("version.txt")));
+
+           VERSION_CODE = reader.readLine();
+
+        } catch (IOException e) {
+            //log the exception
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+
+
+        }
     }
 
     void loadUserInfo() {
@@ -63,9 +96,13 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void createDialogInfo() {
-        new AlertDialog.Builder(this)
-                .setMessage("Version: " + BuildConfig.GitVersion)
-                .setTitle("Info").show();
+
+
+
+            new AlertDialog.Builder(this)
+                    .setMessage("Version: " + VERSION_CODE)
+                    .setTitle("Info").show();
+
 
     }
 }
