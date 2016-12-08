@@ -3,6 +3,7 @@ package com.beliyvlastelin.snakes;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,8 +23,8 @@ import java.util.List;
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences userPref;
 
-    public static String USER_NAME;
-    public static final int REQUEST_CODE = 1;
+    public static String USER_NAME ;
+    public static final int REQUEST_CODE = 1 ;
 
     TextView userName;
     public  static String VERSION_CODE;
@@ -33,6 +34,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         readVerionCode();
+
         userName = (TextView) findViewById(R.id.menu_user_name);
         loadUserInfo();
         if (USER_NAME == null) {
@@ -105,4 +107,6 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+
 }

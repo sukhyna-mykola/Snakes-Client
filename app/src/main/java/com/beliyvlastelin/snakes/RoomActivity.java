@@ -47,9 +47,9 @@ public class RoomActivity extends AppCompatActivity {
 
     void getAllPlayers() {
         players.add(mPlayer);
-        players.add(new Player("Player 1", false, 0, false));
-        players.add(new Player("Player 2", false, 0, true));
-        players.add(new Player("Player 3", true, 0, false));
+       // players.add(new Player("Player 1", false, 0, false));
+        //players.add(new Player("Player 2", false, 0, true));
+      //  players.add(new Player("Player 3", true, 0, false));
 
     }
 }

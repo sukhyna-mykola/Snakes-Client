@@ -8,10 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     EditText name;
     EditText password;
-    Button reg;
     SharedPreferences userPref;
 
     @Override
@@ -20,26 +19,35 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         name = (EditText) findViewById(R.id.login_user_name);
         password = (EditText) findViewById(R.id.login_password);
-        reg = (Button) findViewById(R.id.login_reg);
-        reg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String nameStr =  name.getText().toString();
-                String passwordStr = password.getText().toString();
-                saveUserInfo(nameStr,passwordStr);
-                Intent intent = new Intent();
-                intent.putExtra(Constants.USER_NAME_KEY,nameStr);
-                setResult(RESULT_OK,intent);
-                finish();
-            }
-        });
+
 
     }
-    void saveUserInfo(String nameStr,String passwordStr) {
+    private void saveUserInfo(String nameStr,String passwordStr) {
         userPref = getSharedPreferences(Constants.USER_PREFERENCES,MODE_PRIVATE);
         SharedPreferences.Editor ed = userPref.edit();
         ed.putString(Constants.USER_NAME_KEY,nameStr);
         ed.putString(Constants.USER_PASSWORD_KEY,passwordStr);
         ed.commit();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.login_reg:{
+                getSupportFragmentManager().beginTransaction().add(new RegFragment(),"").commit();
+            break;
+            }
+
+            case R.id.login_enter:{
+                String nameStr =  name.getText().toString();
+                String passwordStr = password.getText().toString();
+              //  saveUserInfo(nameStr,passwordStr);
+                Intent intent = new Intent();
+                intent.putExtra(Constants.USER_NAME_KEY,nameStr);
+                setResult(RESULT_OK,intent);
+                finish();
+                break;
+            }
+        }
     }
 }

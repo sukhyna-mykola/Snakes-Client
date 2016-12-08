@@ -13,4 +13,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="reg">Зареєструватись</string>
+    <string name="enter">Вхід</string>
+    <string name="name_user">Ім\'я користувача</string>
+    <string name="pass_user">Пароль</string>
 </resources>
