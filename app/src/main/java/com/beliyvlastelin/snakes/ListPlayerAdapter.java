@@ -25,22 +25,22 @@ public class ListPlayerAdapter extends RecyclerView.Adapter<ListPlayerAdapter.Pl
 
     @Override
     public void onBindViewHolder(PlayerViewHolder holder, int position) {
-        holder.playerName.setText(players.get(position).getName());
-        holder.playerState.setText(String.valueOf(players.get(position).isState()));
+        holder.playerName.setText(mUsers.get(position).getName());
+        holder.playerState.setText(String.valueOf(mUsers.get(position).isState()));
         holder.plaerPhoto.setImageResource(R.drawable.public_type);
 
     }
 
     @Override
     public int getItemCount() {
-        return players.size();
+        return mUsers.size();
     }
 
 
-    List<Player> players;
+    List<User> mUsers;
 
-    ListPlayerAdapter(List<Player> players) {
-        this.players = players;
+    ListPlayerAdapter(List<User> users) {
+        this.mUsers = users;
     }
 
     public static class PlayerViewHolder extends RecyclerView.ViewHolder {

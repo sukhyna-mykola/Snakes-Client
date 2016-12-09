@@ -4,11 +4,14 @@ package com.beliyvlastelin.snakes;
  * Created by mikola on 16.10.2016.
  */
 
-public class Player {
+public class User {
     String name;
     boolean state;
     int photo;
     boolean admin;
+
+    public User() {
+    }
 
     public boolean isAdmin() {
         return admin;
@@ -42,7 +45,7 @@ public class Player {
         this.state = state;
     }
 
-    public Player(String name, boolean state, int photo, boolean admin) {
+    public User(String name, boolean state, int photo, boolean admin) {
         this.name = name;
         this.state = state;
         this.photo = photo;
