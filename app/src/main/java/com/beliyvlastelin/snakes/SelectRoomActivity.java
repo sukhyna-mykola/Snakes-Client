@@ -2,10 +2,12 @@ package com.beliyvlastelin.snakes;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,8 +21,9 @@ import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
 import static com.beliyvlastelin.snakes.Constants.ROOM_NAME;
 import static com.beliyvlastelin.snakes.Constants.USER_NAME;
 import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
+import static com.beliyvlastelin.snakes.Constants.WAIT_DIALOG_TAG;
 
-public class SelectRoomActivity extends AppCompatActivity {
+public class SelectRoomActivity extends AppCompatActivity implements CreateRoomFragment.Callbacks {
     RecyclerView listRoom;
     List<Room> roomItems = new ArrayList<>();
 
@@ -62,15 +65,22 @@ public class SelectRoomActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void setUpdateListRoom() {
+        getAllRoom();
 
-    private class ListRoomsRequest extends AsyncTask<String, Void, Void> {
+
+    }
+
+
+    private class ListRoomsRequest extends AsyncTask<String, Void, String> {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String doInBackground(String... params) {
 
             HashMap<String, String> map = new HashMap<>();
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_ROOM_LIST, map);
-
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_ROOM_LIST, map);
+            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
                 roomItems.addAll(ManagerRequests.getListRoom(responce));
@@ -80,7 +90,20 @@ public class SelectRoomActivity extends AppCompatActivity {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String aVoid) {
+                ListRoomAdapter mListPlayerAdapter = new ListRoomAdapter(roomItems,SelectRoomActivity.this);
+                listRoom.setAdapter(mListPlayerAdapter);
 
+        }
+    }
+
+    public void dismissDialog() {
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(WAIT_DIALOG_TAG);
+        if (prev != null) {
+            WaitFragment df = (WaitFragment) prev;
+            df.dismiss();
+        }
     }
 }
 

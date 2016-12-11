@@ -17,4 +17,5 @@
     <string name="enter">Вхід</string>
     <string name="name_user">Ім\'я користувача</string>
     <string name="pass_user">Пароль</string>
+    <string name="create_room">Створити кімнату</string>
 </resources>

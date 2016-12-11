@@ -86,8 +86,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             map.put(USER_NAME, params[0]);
             map.put(USER_PASSWORD, params[1]);
-
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_SIGNIN, map);
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_SIGNIN, map);
+            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             return ManagerRequests.getSimpleResult(responce);
         }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,10 +43,8 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         final Room room = rooms.get(position);
         holder.roomName.setText(room.getNameRoom());
         holder.roomAdmin.setText(room.getAdminRoom());
-        if (rooms.get(position).isAccess())
-            holder.roomType.setImageResource(R.drawable.public_type);
-        else
-            holder.roomType.setImageResource(R.drawable.private_type);
+
+        holder.roomType.setImageResource(R.drawable.public_type);
 
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +98,9 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
             HashMap<String, String> map = new HashMap<>();
             map.put(ROOM_NAME, roomName);
 
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_JOIN_TO_ROOM, map);
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_JOIN_TO_ROOM, map);
+            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+
             return ManagerRequests.getSimpleResult(responce);
         }
 
@@ -107,8 +108,9 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         protected void onPostExecute(String s) {
             if (s.equals(RESULT_SUCCESSFUL)) {
                 Intent intent = new Intent(parentActivity, RoomActivity.class);
-                intent.putExtra(ROOM_NAME_KEY,roomName);
+                intent.putExtra(ROOM_NAME_KEY, roomName);
                 parentActivity.startActivity(intent);
+                Log.d("Tag", "start RoomActivity");
             } else {
 
             }

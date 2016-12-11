@@ -1,45 +1,120 @@
 package com.beliyvlastelin.snakes;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.beliyvlastelin.snakes.game.Game;
 import com.beliyvlastelin.snakes.game.GameSurface;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.net.Socket;
+import java.util.HashMap;
 
-public class GameActivity extends AppCompatActivity {
+import static com.beliyvlastelin.snakes.Constants.COURSE;
+import static com.beliyvlastelin.snakes.Constants.RESPONCE_DOWN;
+import static com.beliyvlastelin.snakes.Constants.RESPONCE_RIGHT;
+import static com.beliyvlastelin.snakes.Constants.RESPONCE_UP;
+import static com.beliyvlastelin.snakes.Constants.RESPONCE_lEFT;
+import static com.beliyvlastelin.snakes.Constants.RESULT_ERROR;
+import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
+import static com.beliyvlastelin.snakes.Constants.USER_NAME;
+import static com.beliyvlastelin.snakes.Constants.USER_NAME_KEY;
+import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
+
+public class GameActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
     private FrameLayout frame;
     private GameSurface mGameSurface;
     private Game mGame;
-
+    private SimpleGestureFilter detector;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
-        mGame = new Game(getResources().getDisplayMetrics().widthPixels, getResources().getDisplayMetrics().widthPixels);
-        mGameSurface = new GameSurface(this, mGame);
-        mGameSurface.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mGame.update();
-                mGameSurface.draw();
-            }
-        });
         frame = (FrameLayout) findViewById(R.id.game_layout);
-        frame.addView(mGameSurface);
+        detector = new SimpleGestureFilter(this, this);
+        frame.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                    @Override
+                    public void onGlobalLayout() {
+                        mGame = new Game(frame.getWidth(), frame.getHeight());
+                        mGameSurface = new GameSurface(GameActivity.this, mGame);
+                        frame.addView(mGameSurface);
+                        frame.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
 
+                });
+
+
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+
+        SendCourseRequest sendCourseRequest = new SendCourseRequest();
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                sendCourseRequest.execute(RESPONCE_RIGHT);
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                sendCourseRequest.execute(RESPONCE_lEFT);
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN:
+                sendCourseRequest.execute(RESPONCE_DOWN);
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                sendCourseRequest.execute(RESPONCE_UP);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onDoubleTap() {
+        Toast.makeText(this, "двічі", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+
+
+    private class SendCourseRequest extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            HashMap<String, String> map = new HashMap<>();
+
+            map.put(COURSE, params[0]);
+
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_CHANGECOURSE, map);
+            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            return responce;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            if (s.equals(RESULT_SUCCESSFUL)) {
+
+            } else {
+
+            }
+
+        }
     }
 }

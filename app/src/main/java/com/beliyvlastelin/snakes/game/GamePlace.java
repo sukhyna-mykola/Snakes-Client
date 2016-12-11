@@ -78,7 +78,7 @@ public class GamePlace {
         }
 
 
-       res =  ManagerRequests.get(Constants.ip,Constants.port).getResponceWithCordinats();
+       res =  ManagerRequests.get(Constants.ip,Constants.port).getResponce();
 
     }
 

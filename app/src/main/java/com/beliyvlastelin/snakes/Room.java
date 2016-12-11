@@ -7,10 +7,21 @@ import java.util.ArrayList;
  */
 
 public class Room {
-    String nameRoom;
-    String adminRoom;
-    int plaerCount;
-    boolean access;
+    public Room() {
+    }
+
+    private String nameRoom;
+    private String adminRoom;
+    private int userCount;
+    private int maxUserCount;
+
+    public int getMaxUserCount() {
+        return maxUserCount;
+    }
+
+    public void setMaxUserCount(int maxUserCount) {
+        this.maxUserCount = maxUserCount;
+    }
 
     public String getNameRoom() {
         return nameRoom;
@@ -28,26 +39,19 @@ public class Room {
         this.adminRoom = adminRoom;
     }
 
-    public int getPlaerCount() {
-        return plaerCount;
+    public int getUserCount() {
+        return userCount;
     }
 
-    public void setPlaerCount(int plaerCount) {
-        this.plaerCount = plaerCount;
+    public void setUserCount(int userCount) {
+        this.userCount = userCount;
     }
 
-    public boolean isAccess() {
-        return access;
-    }
-
-    public void setAccess(boolean access) {
-        this.access = access;
-    }
-
-    public Room(String nameRoom, String adminRoom, int plaerCount, boolean access) {
+    public Room(String nameRoom, String adminRoom, int userCount, int maxUserCount) {
         this.nameRoom = nameRoom;
         this.adminRoom = adminRoom;
-        this.plaerCount = plaerCount;
-        this.access = access;
+        this.userCount = userCount;
+        this.maxUserCount = maxUserCount;
+
     }
 }

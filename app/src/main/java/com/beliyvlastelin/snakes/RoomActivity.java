@@ -45,7 +45,7 @@ public class RoomActivity extends AppCompatActivity {
         });
 
         nameRoom = getIntent().getStringExtra(ROOM_NAME_KEY);
-        getActionBar().setTitle(nameRoom);
+        //getActionBar().setTitle(nameRoom);
 
         listPlayer.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -57,11 +57,7 @@ public class RoomActivity extends AppCompatActivity {
 
 
     void getAllPlayers() {
-        mUsers.add(mUser);
         new ListUsersRequest().execute(nameRoom);
-        //  mUsers.add(new User("User 1", false, 0, false));
-        //  mUsers.add(new User("User 2", false, 0, true));
-        //  mUsers.add(new User("User 3", true, 0, false));
 
     }
 
@@ -74,7 +70,8 @@ public class RoomActivity extends AppCompatActivity {
 
             map.put(ROOM_NAME, params[0]);
 
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_USER_LIST, map);
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_USER_LIST, map);
+            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
 
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
@@ -96,4 +93,33 @@ public class RoomActivity extends AppCompatActivity {
 
         }
     }
+    private class StartGameRequest extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            HashMap<String, String> map = new HashMap<>();
+
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_START_GAME, map);
+            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            if (responce.equals(RESULT_SUCCESSFUL)) {
+                mUsers.addAll(ManagerRequests.getUsersInRoom(responce));
+            } else {
+            }
+
+            return ManagerRequests.getSimpleResult(responce);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s.equals(RESULT_SUCCESSFUL)) {
+                ListPlayerAdapter mListPlayerAdapter = new ListPlayerAdapter(mUsers);
+                listPlayer.setAdapter(mListPlayerAdapter);
+            } else {
+
+            }
+
+        }
+    }
+
 }

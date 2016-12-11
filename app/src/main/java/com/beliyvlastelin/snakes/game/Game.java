@@ -34,7 +34,7 @@ public class Game {
     private float widhtCell;
     private float heihgtCell;
 
-    public static final int sizePlace = 50;
+    public static final int sizePlace = 21;
 
 
     public GamePlace getGamePlace() {
@@ -47,6 +47,5 @@ public class Game {
 
     public void update(){
         mGamePlace.update();
-
     }
 }
