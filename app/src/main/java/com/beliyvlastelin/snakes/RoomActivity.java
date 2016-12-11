@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -40,7 +41,14 @@ public class RoomActivity extends AppCompatActivity {
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mContext, GameActivity.class));
+
+                for (User user : mUsers) {
+                    if (user.getName().equals(MenuActivity.USER_NAME))
+                        if (user.isAdmin()) {
+                             new StartGameRequest().execute();
+                        }
+                }
+
             }
         });
 
@@ -51,6 +59,7 @@ public class RoomActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         listPlayer.setLayoutManager(llm);
         getAllPlayers();
+
 
 
     }
@@ -71,7 +80,7 @@ public class RoomActivity extends AppCompatActivity {
             map.put(ROOM_NAME, params[0]);
 
             ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_USER_LIST, map);
-            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
 
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
@@ -87,39 +96,56 @@ public class RoomActivity extends AppCompatActivity {
             if (s.equals(RESULT_SUCCESSFUL)) {
                 ListPlayerAdapter mListPlayerAdapter = new ListPlayerAdapter(mUsers);
                 listPlayer.setAdapter(mListPlayerAdapter);
+                for (User user : mUsers) {
+                    if (user.getName().equals(MenuActivity.USER_NAME))
+                        if (!user.isAdmin()) {
+                            new StartGame().execute();
+                        }
+                }
+
             } else {
 
             }
 
         }
     }
-    private class StartGameRequest extends AsyncTask<String, Void, String> {
+
+    private class StartGameRequest extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected String doInBackground(String... params) {
-
+        protected Void doInBackground(String... params) {
             HashMap<String, String> map = new HashMap<>();
-
             ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_START_GAME, map);
-            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
-            if (responce.equals(RESULT_SUCCESSFUL)) {
-                mUsers.addAll(ManagerRequests.getUsersInRoom(responce));
-            } else {
-            }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            new StartGame().execute();
+        }
+    }
+
+    private class StartGame extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             return ManagerRequests.getSimpleResult(responce);
         }
 
         @Override
         protected void onPostExecute(String s) {
             if (s.equals(RESULT_SUCCESSFUL)) {
-                ListPlayerAdapter mListPlayerAdapter = new ListPlayerAdapter(mUsers);
-                listPlayer.setAdapter(mListPlayerAdapter);
+                Intent intent = new Intent(RoomActivity.this, GameActivity.class);
+                startActivity(intent);
+                Log.d("Tag", "start RoomActivity");
             } else {
 
             }
 
         }
     }
+
 
 }

@@ -25,7 +25,9 @@ public class Game {
         this.height = height;
 
         widhtCell = widht/sizePlace;
-        heihgtCell = height/sizePlace;
+        heihgtCell  = widht/sizePlace;
+        //heihgtCell = height/sizePlace;
+
     }
 
     private float widht;
@@ -47,5 +49,6 @@ public class Game {
 
     public void update(){
         mGamePlace.update();
+
     }
 }

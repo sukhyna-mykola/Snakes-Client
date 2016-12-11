@@ -32,6 +32,9 @@ public class Snake {
         this.body = body;
     }
 
+    public Snake() {
+    }
+
     private void addBodyCell(GameCell cell){
         body.add(cell);
     }

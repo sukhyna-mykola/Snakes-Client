@@ -45,6 +45,9 @@ public class Constants {
     public static final String RESPONCE_RIGHT = "right";
     public static final String RESPONCE_UP = "up";
     public static final String RESPONCE_DOWN = "down";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String SNAKE = "snake";
 
     public static final String NUMBER_USERS = "number_users";
     public static final String MAX_NUMBER_USERS = "max_number_users";
@@ -54,8 +57,8 @@ public class Constants {
 
     public static final String WAIT_DIALOG_TAG = "WaitDialog";
 
-    //public  static  final String ip = "192.168.1.126";
-    public static final String ip = "192.168.1.100";
+    public  static  final String ip = "192.168.1.112";
+   // public static final String ip = "192.168.1.126";
     public static final int port = 8888;
 
 

@@ -53,8 +53,8 @@ public class ManagerRequestsTest {
 
         map.put(USER_NAME, "name");
         map.put(USER_PASSWORD, "password");
-        when(ManagerRequests.get(Constants.ip, Constants.port)).thenReturn(manager);
-        manager.sendRequest(Constants.POST_REQUEST_SIGNIN, map);
+//        when(ManagerRequests.get(Constants.ip, Constants.port)).thenReturn(manager);
+        //manager.sendRequest(Constants.POST_REQUEST_SIGNIN, map);
 
 //
 

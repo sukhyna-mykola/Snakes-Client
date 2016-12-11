@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -100,10 +101,11 @@ public class GameActivity extends AppCompatActivity implements SimpleGestureFilt
             HashMap<String, String> map = new HashMap<>();
 
             map.put(COURSE, params[0]);
+            Log.d("Tag","course = "+params[0]);
 
             ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_CHANGECOURSE, map);
-            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
-            return responce;
+            //String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            return RESULT_SUCCESSFUL;
         }
 
         @Override
