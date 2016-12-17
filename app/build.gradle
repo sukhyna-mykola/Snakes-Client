@@ -1,15 +1,25 @@
 //noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
-def getGitVersionName = {->
+def getGitVersionName = { ->
     def stdout = new ByteArrayOutputStream()
-    exec{
-        commandLine 'git','describe'
-        standardOutput = stdout
+    def os = System.getProperty("os.name").toLowerCase()
+    if (!os.contains("windows")) {
+        exec {
+            executable "sh"
+            args '-c', 'git describe | wc -l | tr -d " "'
+            standardOutput = stdout;
+        }
+    } else {
+        exec {
+            executable "cmd"
+            args "/c", "git describe  | find /c /v \"\""
+            standardOutput = stdout;
+        }
     }
-    return stdout.toString().trim().split('-')[0].substring(1)
+    stdout = stdout  as String
+    return stdout.toString().trim()
 }
-
 
 def String GitVersion = getGitVersionName()
 
@@ -24,9 +34,9 @@ android {
         versionCode 1
 
         GitVersion = getGitVersionName();
-        versionName  GitVersion
+        versionName GitVersion
 
-        buildConfigField ("String", "GitVersion", '"'+GitVersion+'"' )
+        buildConfigField("String", "GitVersion", '"' + GitVersion + '"')
 
         def stringsFile = new File("app/src/main/assets/version.txt")
         stringsFile.write(GitVersion)
@@ -41,7 +51,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
         }
-              debug  {
+        debug {
 
 
         }
