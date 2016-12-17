@@ -36,9 +36,9 @@ android {
         GitVersion = getGitVersionName();
         versionName GitVersion
 
-
         buildConfigField("String", "GitVersion", '"' + GitVersion + '"')
-
+        def dirFile = new File("$projectDir/src/main/assets")
+        dirFile.mkdir()
         def stringsFile = new File("$projectDir/src/main/assets/version.txt")
         stringsFile.createNewFile()
         stringsFile.write(GitVersion)
