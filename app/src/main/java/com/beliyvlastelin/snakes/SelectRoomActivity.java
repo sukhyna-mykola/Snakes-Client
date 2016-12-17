@@ -35,15 +35,17 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
         listRoom.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         listRoom.setLayoutManager(llm);
-
-        getAllRoom();
-
-
     }
 
     void getAllRoom() {
         // отримати всі кімнати з сервера
         new ListRoomsRequest().execute();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getAllRoom();
     }
 
     @Override
@@ -68,8 +70,6 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
     @Override
     public void setUpdateListRoom() {
         getAllRoom();
-
-
     }
 
 
@@ -80,7 +80,7 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
 
             HashMap<String, String> map = new HashMap<>();
             ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_ROOM_LIST, map);
-            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
                 roomItems.addAll(ManagerRequests.getListRoom(responce));
@@ -92,8 +92,8 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
 
         @Override
         protected void onPostExecute(String aVoid) {
-                ListRoomAdapter mListPlayerAdapter = new ListRoomAdapter(roomItems,SelectRoomActivity.this);
-                listRoom.setAdapter(mListPlayerAdapter);
+            ListRoomAdapter mListPlayerAdapter = new ListRoomAdapter(roomItems, SelectRoomActivity.this);
+            listRoom.setAdapter(mListPlayerAdapter);
 
         }
     }

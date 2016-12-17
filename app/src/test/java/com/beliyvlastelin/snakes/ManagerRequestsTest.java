@@ -2,14 +2,10 @@ package com.beliyvlastelin.snakes;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-
-import static com.beliyvlastelin.snakes.Constants.USER_NAME;
-import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 import static org.junit.Assert.*;
 
@@ -19,11 +15,7 @@ import static org.junit.Assert.*;
 public class ManagerRequestsTest {
 
     ManagerRequests manager;
-
-    @Before
-    public void setUp() throws Exception {
-        manager = mock(ManagerRequests.class);
-    }
+    
 
     @Test
     public void getListRoom() throws Exception {
@@ -48,16 +40,13 @@ public class ManagerRequestsTest {
     }
 
     @Test
-    public void sendRequest() throws Exception {
-        HashMap<String, String> map = new HashMap<>();
+    public void getResponce() throws Exception {
+        String test = "test";
 
-        map.put(USER_NAME, "name");
-        map.put(USER_PASSWORD, "password");
-//        when(ManagerRequests.get(Constants.ip, Constants.port)).thenReturn(manager);
-        //manager.sendRequest(Constants.POST_REQUEST_SIGNIN, map);
-
-//
-
+        //mockito
+        manager = mock(ManagerRequests.class);
+        when(manager.getResponce()).thenReturn(test);
+        assertEquals(test,manager.getResponce());
 
     }
 

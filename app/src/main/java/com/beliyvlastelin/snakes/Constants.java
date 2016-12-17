@@ -19,6 +19,7 @@ public class Constants {
     public static final String POST_REQUEST_ROOM_LIST = "GETROOMLIST";
     public static final String POST_REQUEST_CHANGECOURSE = "CHANGECOURSE";
     public static final String POST_REQUEST_START_GAME = "STARTGAME";
+    public static final String POST_REQUEST_EXITFROMROOM = "EXITFROMROOM";
 
     public static final String YOUR_SNAKE = "you";
     public static final String OTHER_SNAKE = "other_snakes";

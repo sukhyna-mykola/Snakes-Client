@@ -43,7 +43,8 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         final Room room = rooms.get(position);
         holder.roomName.setText(room.getNameRoom());
         holder.roomAdmin.setText(room.getAdminRoom());
-
+        holder.numberUsers.setText(String.valueOf(room.getUserCount()));
+        holder.maxNumberUsers.setText(String.valueOf(room.getMaxUserCount()));
         holder.roomType.setImageResource(R.drawable.public_type);
 
         holder.cv.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +71,8 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         CardView cv;
         TextView roomName;
         TextView roomAdmin;
+        TextView numberUsers;
+        TextView maxNumberUsers;
         ImageView roomType;
 
         RoomViewHolder(View itemView) {
@@ -77,7 +80,10 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
             cv = (CardView) itemView.findViewById(R.id.cv);
             roomName = (TextView) itemView.findViewById(R.id.room_name);
             roomAdmin = (TextView) itemView.findViewById(R.id.room_admin);
+            numberUsers = (TextView) itemView.findViewById(R.id.number_users);
+            maxNumberUsers = (TextView) itemView.findViewById(R.id.max_number_users);
             roomType = (ImageView) itemView.findViewById(R.id.room_photo);
+
 
 
         }

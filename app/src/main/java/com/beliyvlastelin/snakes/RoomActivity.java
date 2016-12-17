@@ -45,7 +45,7 @@ public class RoomActivity extends AppCompatActivity {
                 for (User user : mUsers) {
                     if (user.getName().equals(MenuActivity.USER_NAME))
                         if (user.isAdmin()) {
-                             new StartGameRequest().execute();
+                            new StartGameRequest().execute();
                         }
                 }
 
@@ -59,7 +59,6 @@ public class RoomActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         listPlayer.setLayoutManager(llm);
         getAllPlayers();
-
 
 
     }
@@ -147,5 +146,26 @@ public class RoomActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        new ExitFromRoom().execute();
+    }
+
+    private class ExitFromRoom extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            HashMap<String, String> map = new HashMap<>();
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_EXITFROMROOM, map);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            finish();
+        }
+    }
 
 }

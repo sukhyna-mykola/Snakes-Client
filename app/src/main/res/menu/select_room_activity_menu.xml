@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-      xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".SelectRoomActivity">
 
     <item
         android:id="@+id/add_room"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="Item"
-        android:showAsAction="always"
-        tools:ignore="AppCompatResource"/>
+        app:showAsAction="always"
+        android:title="Створити кімнату"/>
+
+
 </menu>

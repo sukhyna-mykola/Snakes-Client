@@ -82,8 +82,12 @@ public class ManagerRequests {
 
     public static ManagerRequests get(String ip, int port) {
         if (manager == null && client == null)
-            return manager = new ManagerRequests(ip, port);
-        else return manager;
+            return ManagerRequests.manager = new ManagerRequests(ip, port);
+        else return ManagerRequests.manager;
+    }
+
+    public ManagerRequests(){
+
     }
 
     public void sendRequest(String type, HashMap<String, String> param) {
@@ -124,7 +128,6 @@ public class ManagerRequests {
         try {
             //Отримуємо відпровідь від сервера
             Log.d("Tag", "getResponce()");
-            ;
             String responce = new String(readMessage(in));
 
             Log.d("Tag", "responce = " + responce);
