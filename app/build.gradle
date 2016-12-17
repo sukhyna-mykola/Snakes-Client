@@ -38,7 +38,8 @@ android {
 
         buildConfigField("String", "GitVersion", '"' + GitVersion + '"')
 
-        def stringsFile = new File("app/src/main/assets/version.txt")
+        def stringsFile = new File("$projectDir/version.txt")
+        stringsFile.createNewFile()
         stringsFile.write(GitVersion)
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
