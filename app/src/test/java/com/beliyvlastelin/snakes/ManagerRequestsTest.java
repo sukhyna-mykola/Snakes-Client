@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class ManagerRequestsTest {
 
     ManagerRequests manager;
-    
+
 
     @Test
     public void getListRoom() throws Exception {
