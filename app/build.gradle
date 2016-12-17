@@ -13,12 +13,12 @@ def getGitVersionName = { ->
     } else {
         exec {
             executable "cmd"
-            args "/c", "git describe  | find /c /v \"\""
+            args "/c", "git describe"
             standardOutput = stdout;
         }
     }
     stdout = stdout  as String
-    return stdout.toString().trim()
+    return stdout.toString().trim().split('-')[0]
 }
 
 def String GitVersion = getGitVersionName()
