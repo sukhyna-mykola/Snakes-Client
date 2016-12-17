@@ -10,6 +10,4 @@ android:
     - android-24
     - extra-android-m2repository
 before_script: chmod +x gradlew
-script:  
--./gradlew build 
--./gradlew connectedAndroidTest 
+script: ./gradlew connectedAndroidTest 
