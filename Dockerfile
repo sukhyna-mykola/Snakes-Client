@@ -1,43 +1,42 @@
 
-FROM ubuntu:14.04
+FROM java:8
 
 MAINTAINER Sukhyna Mykola <kola.suxina@gmail.com>
+ENV DEBIAN_FRONTEND noninteractive
 
+# Install dependencies
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -yq libstdc++6:i386 zlib1g:i386 libncurses5:i386 --no-install-recommends && \
+    apt-get -y install --reinstall locales && \
+    dpkg-reconfigure locales && \
+    echo 'ja_JP.UTF-8 UTF-8' >> /etc/locale.gen && \
+    locale-gen ja_JP.UTF-8 && \
+    localedef --list-archive && locale -a &&  \
+    update-locale &&  \
+    apt-get clean
 
-RUN apt-get update
+# Download and untar SDK
+ENV ANDROID_SDK_URL http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz
+RUN curl -L "${ANDROID_SDK_URL}" | tar --no-same-owner -xz -C /usr/local
+ENV ANDROID_HOME /usr/local/android-sdk-linux
+ENV ANDROID_SDK /usr/local/android-sdk-linux
+ENV PATH ${ANDROID_HOME}/tools:$ANDROID_HOME/platform-tools:$PATH
 
-# Install java8
-RUN apt-get install -y software-properties-common \
-    && add-apt-repository -y ppa:webupd8team/java \
-    && apt-get update
-RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 \
-    select true | /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java8-installer
+# Install Android SDK components
 
-# Install Deps
-RUN dpkg --add-architecture i386 && apt-get update \
-    && apt-get install -y --force-yes expect wget \
-    libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1
+ONBUILD COPY android_sdk_components.env /android_sdk_components.env
+ONBUILD RUN (while :; do echo 'y'; sleep 3; done) | android update sdk --no-ui --all --filter "$(cat /android_sdk_components.env)"
 
-# Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet \
-    http://dl.google.com/android/android-sdk_r24.3.3-linux.tgz \
-    && tar xzf android-sdk.tgz && rm -f android-sdk.tgz \
-    && chown -R root.root android-sdk-linux
+# Support Gradle
+ENV TERM dumb
+ENV JAVA_OPTS -Xms256m -Xmx512m
+ENV PROJECT /project
+RUN mkdir $PROJECT
+WORKDIR $PROJECT
+COPY . $PROJECT
 
-# Setup environment
-ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+RUN ./gradlew --stacktrace androidDependencies
 
-# Install sdk elements
-COPY tools /opt/tools
-ENV PATH ${PATH}:/opt/tools
-RUN ["/opt/tools/android-accept-licenses.sh", \
-    "android update sdk --all --force --no-ui --filter platform-tools,tools,build-tools-23,build-tools-23.0.2,android-23,addon-google_apis_x86-google-23,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,sys-img-armeabi-v7a-android-23"]
-
-# Cleaning
-RUN apt-get clean
-
-# Go to workspace
-RUN mkdir -p /opt/workspace
-WORKDIR /opt/workspace
+CMD ./gradlew --stacktrace build
