@@ -7,7 +7,7 @@ def getGitVersionName = { ->
     if (!os.contains("windows")) {
         exec {
             executable "sh"
-            args '-c', 'git describe | wc -l | tr -d " "'
+            args '-c', 'git describe'
             standardOutput = stdout;
         }
     } else {
