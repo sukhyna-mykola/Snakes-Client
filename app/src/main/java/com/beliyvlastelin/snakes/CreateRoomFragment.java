@@ -26,8 +26,8 @@ import static com.beliyvlastelin.snakes.Constants.ROOM_NAME_KEY;
 
 public class CreateRoomFragment extends DialogFragment implements View.OnClickListener {
     private EditText nameRoom;
-    private TextView statusReg;
-    private Button reg;
+    private CustomFontTextView statusReg;
+    private CustomFontButton reg;
 
 
     @NonNull
@@ -36,8 +36,8 @@ public class CreateRoomFragment extends DialogFragment implements View.OnClickLi
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_create_room, null);
         nameRoom = (EditText) v.findViewById(R.id.input_room_name);
 
-        statusReg = (TextView) v.findViewById(R.id.status_reg);
-        reg = (Button) v.findViewById(R.id.login_reg);
+        statusReg = (CustomFontTextView) v.findViewById(R.id.status_reg);
+        reg = (CustomFontButton) v.findViewById(R.id.login_reg);
         reg.setOnClickListener(this);
 
         return new AlertDialog.Builder(getActivity())

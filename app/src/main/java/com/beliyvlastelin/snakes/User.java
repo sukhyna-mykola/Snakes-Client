@@ -5,10 +5,9 @@ package com.beliyvlastelin.snakes;
  */
 
 public class User {
-    String name;
-    boolean state;
-    int photo;
-    boolean admin;
+    private String name;
+    private int photo;
+    private boolean admin;
 
     public User() {
     }
@@ -37,17 +36,9 @@ public class User {
         this.name = name;
     }
 
-    public boolean isState() {
-        return state;
-    }
 
-    public void setState(boolean state) {
-        this.state = state;
-    }
-
-    public User(String name, boolean state, int photo, boolean admin) {
+    public User(String name, int photo, boolean admin) {
         this.name = name;
-        this.state = state;
         this.photo = photo;
         this.admin = admin;
     }

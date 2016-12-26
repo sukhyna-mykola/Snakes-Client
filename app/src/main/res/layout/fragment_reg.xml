@@ -8,14 +8,16 @@
 
     <include layout="@layout/name_email_form"/>
 
-    <TextView
+    <com.beliyvlastelin.snakes.CustomFontTextView
         android:id="@+id/status_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="@dimen/small_dimens"/>
 
-    <Button
+    <com.beliyvlastelin.snakes.CustomFontButton
+        style="@style/button_style"
+        android:background="@drawable/background_btn_blue"
         android:id="@+id/login_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

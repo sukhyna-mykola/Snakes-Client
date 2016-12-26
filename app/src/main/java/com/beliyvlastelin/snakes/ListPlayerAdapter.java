@@ -25,9 +25,18 @@ public class ListPlayerAdapter extends RecyclerView.Adapter<ListPlayerAdapter.Pl
 
     @Override
     public void onBindViewHolder(PlayerViewHolder holder, int position) {
-        holder.playerName.setText(mUsers.get(position).getName());
-        holder.playerState.setText(String.valueOf(mUsers.get(position).isState()));
-        holder.plaerPhoto.setImageResource(R.drawable.public_type);
+        User user = mUsers.get(position);
+        holder.playerName.setText(user.getName());
+        holder.playerPhoto.setImageResource(user.getPhoto());
+
+        if (user.getName().equals(MenuActivity.nameStr)) {
+            holder.cv.setCardBackgroundColor(parentActivity.getResources().getColor(R.color.colorUser));
+        }
+
+        if (user.isAdmin()) {
+            holder.cv.setCardBackgroundColor(parentActivity.getResources().getColor(R.color.colorFreeRoom));
+        }
+
 
     }
 
@@ -38,23 +47,23 @@ public class ListPlayerAdapter extends RecyclerView.Adapter<ListPlayerAdapter.Pl
 
 
     List<User> mUsers;
+    RoomActivity parentActivity;
 
-    ListPlayerAdapter(List<User> users) {
+    ListPlayerAdapter(List<User> users, RoomActivity parentActivity) {
         this.mUsers = users;
+        this.parentActivity = parentActivity;
     }
 
     public static class PlayerViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView playerName;
-        TextView playerState;
-        ImageView plaerPhoto;
+        ImageView playerPhoto;
 
         PlayerViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
             playerName = (TextView) itemView.findViewById(R.id.player_name);
-            playerState = (TextView) itemView.findViewById(R.id.player_state);
-            plaerPhoto = (ImageView) itemView.findViewById(R.id.player_photo);
+            playerPhoto = (ImageView) itemView.findViewById(R.id.player_photo);
         }
     }
 

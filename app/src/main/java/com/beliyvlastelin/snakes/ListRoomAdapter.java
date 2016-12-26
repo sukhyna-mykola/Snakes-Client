@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +44,16 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         holder.roomAdmin.setText(room.getAdminRoom());
         holder.numberUsers.setText(String.valueOf(room.getUserCount()));
         holder.maxNumberUsers.setText(String.valueOf(room.getMaxUserCount()));
-        holder.roomType.setImageResource(R.drawable.public_type);
+
+
+        if (room.getUserCount() == room.getMaxUserCount()) {
+            holder.cv.setCardBackgroundColor(parentActivity.getResources().getColor(R.color.colorFullRoom));
+            holder.roomType.setImageResource(R.drawable.full_room_icon);
+            holder.cv.setClickable(false);
+        } else {
+            holder.cv.setCardBackgroundColor(parentActivity.getResources().getColor(R.color.colorFreeRoom));
+            holder.roomType.setImageResource(R.drawable.free_room_icon);
+        }
 
         holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,21 +77,20 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
 
     public class RoomViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
-        TextView roomName;
-        TextView roomAdmin;
-        TextView numberUsers;
-        TextView maxNumberUsers;
+        CustomFontTextView roomName;
+        CustomFontTextView roomAdmin;
+        CustomFontTextView numberUsers;
+        CustomFontTextView maxNumberUsers;
         ImageView roomType;
 
         RoomViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
-            roomName = (TextView) itemView.findViewById(R.id.room_name);
-            roomAdmin = (TextView) itemView.findViewById(R.id.room_admin);
-            numberUsers = (TextView) itemView.findViewById(R.id.number_users);
-            maxNumberUsers = (TextView) itemView.findViewById(R.id.max_number_users);
+            roomName = (CustomFontTextView) itemView.findViewById(R.id.room_name);
+            roomAdmin = (CustomFontTextView) itemView.findViewById(R.id.room_admin);
+            numberUsers = (CustomFontTextView) itemView.findViewById(R.id.number_users);
+            maxNumberUsers = (CustomFontTextView) itemView.findViewById(R.id.max_number_users);
             roomType = (ImageView) itemView.findViewById(R.id.room_photo);
-
 
 
         }
@@ -108,6 +115,8 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
             String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
 
             return ManagerRequests.getSimpleResult(responce);
+
+
         }
 
         @Override

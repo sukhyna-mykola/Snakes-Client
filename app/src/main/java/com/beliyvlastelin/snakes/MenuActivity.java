@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,16 +19,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import static com.beliyvlastelin.snakes.Constants.RESULT_ERROR;
+import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
+import static com.beliyvlastelin.snakes.Constants.USER_NAME;
+import static com.beliyvlastelin.snakes.Constants.USER_NAME_KEY;
+import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
     SharedPreferences userPref;
 
-    public static String USER_NAME ;
-    public static final int REQUEST_CODE = 1 ;
+    public static String nameStr;
+    public static String passwordStr;
 
-    TextView userName;
-    public  static String VERSION_CODE;
+    public static final int REQUEST_CODE = 1;
+
+    public static String VERSION_CODE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +44,25 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_menu);
         readVerionCode();
 
-        userName = (TextView) findViewById(R.id.menu_user_name);
+
+
         loadUserInfo();
-        if (USER_NAME == null) {
+
+        if (nameStr == null) {
             startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
-        } else
-            userName.setText(USER_NAME);
+        } else {
+           new EnterRequest().execute(nameStr, passwordStr);
+        }
 
     }
-    private void readVerionCode(){
+
+    private void readVerionCode() {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
                     new InputStreamReader(this.getAssets().open("version.txt")));
 
-           VERSION_CODE = reader.readLine();
+            VERSION_CODE = reader.readLine();
 
         } catch (IOException e) {
             //log the exception
@@ -68,15 +81,15 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
     void loadUserInfo() {
         userPref = getSharedPreferences(Constants.USER_PREFERENCES, MODE_PRIVATE);
-        USER_NAME = userPref.getString(Constants.USER_NAME_KEY, null);
+        nameStr = userPref.getString(Constants.USER_NAME_KEY, null);
+        passwordStr = userPref.getString(Constants.USER_PASSWORD_KEY, null);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            USER_NAME = data.getStringExtra(Constants.USER_NAME_KEY);
-            userName.setText(USER_NAME);
+            nameStr = data.getStringExtra(Constants.USER_NAME_KEY);
         }
     }
 
@@ -93,20 +106,47 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.menu_info: {
                 createDialogInfo();
+                break;
+            }
+
+            case R.id.menu_settings:{
+                Snackbar.make(v,"Покищо недоступно",Snackbar.LENGTH_SHORT).show();
+                break;
             }
         }
     }
 
     private void createDialogInfo() {
 
-
-
-            new AlertDialog.Builder(this)
-                    .setMessage("Version: " + VERSION_CODE)
-                    .setTitle("Info").show();
+        new AlertDialog.Builder(this)
+                .setMessage("Version: " + VERSION_CODE)
+                .setTitle("Info").show();
 
 
     }
 
+    private class EnterRequest extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... params) {
+
+            HashMap<String, String> map = new HashMap<>();
+
+            map.put(USER_NAME, params[0]);
+            map.put(USER_PASSWORD, params[1]);
+            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_SIGNIN, map);
+            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            return ManagerRequests.getSimpleResult(responce);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s.equals(RESULT_SUCCESSFUL)) {
+                Toast.makeText(MenuActivity.this, RESULT_SUCCESSFUL, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MenuActivity.this, RESULT_ERROR, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
 }

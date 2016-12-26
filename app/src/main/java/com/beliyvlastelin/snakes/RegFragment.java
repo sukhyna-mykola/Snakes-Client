@@ -28,7 +28,7 @@ import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 public class RegFragment extends DialogFragment implements View.OnClickListener {
     private EditText name;
     private EditText password;
-    private TextView statusReg;
+    private CustomFontTextView statusReg;
     private Button reg;
 
     private Callbacks mCallbacks;
@@ -40,7 +40,7 @@ public class RegFragment extends DialogFragment implements View.OnClickListener 
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_reg, null);
         name = (EditText) v.findViewById(R.id.login_user_name);
         password = (EditText) v.findViewById(R.id.login_password);
-        statusReg = (TextView) v.findViewById(R.id.status_reg);
+        statusReg = (CustomFontTextView) v.findViewById(R.id.status_reg);
         reg = (Button) v.findViewById(R.id.login_reg);
         reg.setOnClickListener(this);
 

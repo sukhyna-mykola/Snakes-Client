@@ -21,8 +21,8 @@ import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static com.beliyvlastelin.snakes.Constants.WAIT_DIALOG_TAG;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RegFragment.Callbacks {
-    EditText name;
-    EditText password;
+    private EditText name;
+    private EditText password;
 
 
     private String nameStr;
@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void setName(String nameReg, String passwordReg) {
+
         nameStr = nameReg;
         passwordStr = passwordReg;
 

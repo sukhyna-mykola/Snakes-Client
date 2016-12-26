@@ -14,18 +14,20 @@
        android:gravity="center"
        android:hint="Введіть назву кімнати"/>
 
-    <TextView
+    <com.beliyvlastelin.snakes.CustomFontTextView
         android:id="@+id/status_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="@dimen/small_dimens"/>
 
-    <Button
+    <com.beliyvlastelin.snakes.CustomFontButton
+        android:background="@drawable/background_btn_blue"
+        style="@style/button_style"
         android:id="@+id/login_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/create_room"/>
+        android:text="@string/create_room_text"/>
 
 </LinearLayout>

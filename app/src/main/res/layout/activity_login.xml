@@ -18,14 +18,18 @@
 
         <include layout="@layout/name_email_form"/>
 
-        <Button
+        <com.beliyvlastelin.snakes.CustomFontButton
+            style="@style/button_style"
+            android:background="@drawable/background_btn_green"
             android:onClick="onClick"
             android:id="@+id/login_enter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/enter"/>
 
-        <Button
+        <com.beliyvlastelin.snakes.CustomFontButton
+            style="@style/button_style"
+            android:background="@drawable/background_btn_blue"
             android:onClick="onClick"
             android:id="@+id/login_reg"
             android:layout_width="wrap_content"

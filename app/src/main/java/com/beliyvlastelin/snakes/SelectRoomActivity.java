@@ -1,8 +1,10 @@
 package com.beliyvlastelin.snakes;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,15 +25,19 @@ import static com.beliyvlastelin.snakes.Constants.USER_NAME;
 import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static com.beliyvlastelin.snakes.Constants.WAIT_DIALOG_TAG;
 
-public class SelectRoomActivity extends AppCompatActivity implements CreateRoomFragment.Callbacks {
-    RecyclerView listRoom;
-    List<Room> roomItems = new ArrayList<>();
+public class SelectRoomActivity extends AppCompatActivity implements CreateRoomFragment.Callbacks, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+    private RecyclerView listRoom;
+    private List<Room> roomItems = new ArrayList<>();
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_room);
         listRoom = (RecyclerView) findViewById(R.id.list_of_room);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_select_romm);
+        refreshLayout.setColorSchemeColors(Color.GREEN,Color.RED,Color.YELLOW,Color.BLUE);
+        refreshLayout.setOnRefreshListener(this);
         listRoom.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         listRoom.setLayoutManager(llm);
@@ -48,28 +54,37 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
         getAllRoom();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.select_room_activity_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.add_room:
-                getSupportFragmentManager().beginTransaction().add(new CreateRoomFragment(), "CreateRoomDialog").commit();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     @Override
     public void setUpdateListRoom() {
         getAllRoom();
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.back_select_room:
+                finish();
+                break;
+
+            case R.id.synchron_select_room:
+                getAllRoom();
+                break;
+
+            case R.id.create_room_select_room:
+                getSupportFragmentManager().beginTransaction().add(new CreateRoomFragment(), "CreateRoomDialog").commit();
+                break;
+        }
+
+
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshLayout.setRefreshing(true);
+        getAllRoom();
+        refreshLayout.setRefreshing(false);
     }
 
 

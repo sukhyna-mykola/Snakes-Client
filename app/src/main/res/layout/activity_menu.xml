@@ -1,45 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-  android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context="com.beliyvlastelin.snakes.MenuActivity">
 
-    <TextView
-        android:layout_gravity="center"
-        android:text="User Name"
+    <ImageView
+        android:id="@+id/logo_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/menu_user_name"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/big_dimens"
+        android:src="@drawable/snake" />
 
-    <Button
-        android:onClick="onClick"
-        android:text="Грати"
-        android:layout_gravity="center"
+    <com.beliyvlastelin.snakes.CustomFontTextView
+        android:id="@+id/app_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/menu_play"/>
+        android:layout_below="@+id/logo_icon"
+        android:layout_centerHorizontal="true"
+        android:text="@string/app_name"
+        android:textSize="35sp" />
 
-    <Button
-        android:onClick="onClick"
-        android:text="Вихід"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/menu_exit"/>
-    <Button
-        android:onClick="onClick"
-        android:text="Версія"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/menu_info"/>
+        android:layout_below="@+id/app_name_text"
+        android:gravity="center"
+
+        android:paddingTop="@dimen/big_dimens"
+        tools:context="com.beliyvlastelin.snakes.MenuActivity">
 
 
+        <com.beliyvlastelin.snakes.CustomFontButton
+            android:layout_alignLeft="@+id/menu_settings"
+            android:layout_alignRight="@+id/menu_settings"
+            android:layout_alignParentTop="true"
+            android:id="@+id/menu_play"
+            style="@style/button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_btn_green"
+            android:onClick="onClick"
+            android:text="@string/play_text" />
 
 
-</LinearLayout>
+        <com.beliyvlastelin.snakes.CustomFontButton
+            android:layout_alignLeft="@+id/menu_settings"
+            android:layout_alignRight="@+id/menu_settings"
+            android:layout_below="@+id/menu_play"
+            android:id="@+id/menu_info"
+            style="@style/button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_btn_green"
+            android:onClick="onClick"
+            android:text="@string/version_text" />
+
+        <com.beliyvlastelin.snakes.CustomFontButton
+            android:layout_below="@+id/menu_info"
+            android:id="@+id/menu_settings"
+            style="@style/button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_btn_green"
+            android:onClick="onClick"
+            android:text="@string/sett_text" />
+
+        <com.beliyvlastelin.snakes.CustomFontButton
+            android:layout_alignLeft="@+id/menu_settings"
+            android:layout_alignRight="@+id/menu_settings"
+            android:layout_below="@+id/menu_settings"
+            android:id="@+id/menu_exit"
+            style="@style/button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/background_btn_green"
+            android:onClick="onClick"
+            android:text="@string/exit_text" />
+
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -58,8 +58,9 @@ public class Constants {
 
     public static final String WAIT_DIALOG_TAG = "WaitDialog";
 
-    public  static  final String ip = "192.168.1.112";
+   // public  static  final String ip = "192.168.1.112";
    // public static final String ip = "192.168.1.126";
+    public static final String ip = "10.0.3.2";
     public static final int port = 8888;
 
 

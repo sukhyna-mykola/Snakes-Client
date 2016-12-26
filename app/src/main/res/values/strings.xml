@@ -13,9 +13,14 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="reg">Зареєструватись</string>
-    <string name="enter">Вхід</string>
+    <string name="reg">ЗареЭcтруватись</string>
+    <string name="enter">Вхiд</string>
     <string name="name_user">Ім\'я користувача</string>
     <string name="pass_user">Пароль</string>
-    <string name="create_room">Створити кімнату</string>
+    <string name="create_room_text">Створити кiмнату</string>
+    <string name="all_rooms_text">Доступнi Кiмнати</string>
+    <string name="play_text">Грати</string>
+    <string name="version_text">Версiя</string>
+    <string name="exit_text">Вихiд</string>
+    <string name="sett_text">Налаштування</string>
 </resources>
