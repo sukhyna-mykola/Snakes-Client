@@ -40,6 +40,7 @@ public class Constants {
 
 
     public static final String RESULT_ERROR = "ERROR";
+    public static final String SYSTEM_ERROR = "SYSTEM_ERROR";
     public static final String RESULT_SUCCESSFUL = "SUCCESS";
 
     public static final String RESPONCE_lEFT = "left";
@@ -62,6 +63,10 @@ public class Constants {
    // public static final String ip = "192.168.1.126";
     public static final String ip = "10.0.3.2";
     public static final int port = 8888;
+
+
+    public static final int MAX_PERIOD = 600;
+    public static final String MIN_PERION = "10";
 
 
 }

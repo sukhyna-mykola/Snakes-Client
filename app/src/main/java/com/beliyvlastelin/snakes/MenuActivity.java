@@ -4,13 +4,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +44,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_CODE = 1;
 
     public static String VERSION_CODE;
+    private WebSocketClient mWebSocketClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +52,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_menu);
         readVerionCode();
 
-
+        connectWebSocket();
 
         loadUserInfo();
 
         if (nameStr == null) {
-            startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
+            //  startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
         } else {
-           new EnterRequest().execute(nameStr, passwordStr);
+            // new EnterRequest().execute(nameStr, passwordStr);
         }
 
     }
@@ -109,8 +117,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
 
-            case R.id.menu_settings:{
-                Snackbar.make(v,"Покищо недоступно",Snackbar.LENGTH_SHORT).show();
+            case R.id.menu_settings: {
+                Snackbar.make(v, "Покищо недоступно", Snackbar.LENGTH_SHORT).show();
                 break;
             }
         }
@@ -148,5 +156,51 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         }
+    }
+
+    private void connectWebSocket() {
+        URI uri;
+        try {
+            uri = new URI("ws://10.0.3.2:8080/ws");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        mWebSocketClient = new WebSocketClient(uri) {
+            @Override
+            public void onOpen(ServerHandshake serverHandshake) {
+                Log.i("Websocket", "Opened");
+                mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
+            }
+
+            @Override
+            public void onMessage(String s) {
+                final String message = s;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MenuActivity.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onClose(int i, String s, boolean b) {
+                Log.i("Websocket", "Closed " + s);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.i("Websocket", "Error " + e.getMessage());
+            }
+        };
+        mWebSocketClient.connect();
+    }
+
+    public void sendMessage(View view) {
+
+        mWebSocketClient.send("n");
+
     }
 }

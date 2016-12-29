@@ -34,9 +34,11 @@ import static com.beliyvlastelin.snakes.Constants.MAX_NUMBER_USERS;
 import static com.beliyvlastelin.snakes.Constants.NUMBER_USERS;
 import static com.beliyvlastelin.snakes.Constants.OTHER_SNAKE;
 import static com.beliyvlastelin.snakes.Constants.RESULT_ERROR;
+import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
 import static com.beliyvlastelin.snakes.Constants.ROOM_LIST;
 import static com.beliyvlastelin.snakes.Constants.ROOM_NAME;
 import static com.beliyvlastelin.snakes.Constants.SNAKE;
+import static com.beliyvlastelin.snakes.Constants.SYSTEM_ERROR;
 import static com.beliyvlastelin.snakes.Constants.USERS;
 import static com.beliyvlastelin.snakes.Constants.X;
 import static com.beliyvlastelin.snakes.Constants.Y;
@@ -63,7 +65,8 @@ public class ManagerRequests {
             //   Log.d("Tag", "pre");
             client = new Socket();
             client.setTcpNoDelay(true);
-            client.connect(new InetSocketAddress(ip, port));
+
+            client.connect(new InetSocketAddress(ip, port),1000);
 
             sin = client.getInputStream();
             sout = client.getOutputStream();
@@ -73,9 +76,9 @@ public class ManagerRequests {
             //  Log.d("Tag", "after");
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            // Log.d("Tag", "error");
+           Log.d("Tag", "error");
         }
     }
 
@@ -86,14 +89,15 @@ public class ManagerRequests {
         else return ManagerRequests.manager;
     }
 
-    public ManagerRequests(){
+    public ManagerRequests() {
 
     }
 
-    public void sendRequest(String type, HashMap<String, String> param) {
-        in = new DataInputStream(new BufferedInputStream(sin));
-        out = new DataOutputStream(new BufferedOutputStream(sout));
+    public String sendRequest(String type, HashMap<String, String> param) {
         try {
+            in = new DataInputStream(new BufferedInputStream(sin));
+            out = new DataOutputStream(new BufferedOutputStream(sout));
+
             JSONObject jsonObject = new JSONObject();
             JSONObject jsonObjectParam = new JSONObject();
 
@@ -115,9 +119,11 @@ public class ManagerRequests {
             // отсылаем введенную строку текста серверу.
             out.flush();
 
-
-        } catch (IOException e) {
+            return RESULT_SUCCESSFUL;
+        } catch (Exception e) {
             e.printStackTrace();
+            manager = null;
+            return SYSTEM_ERROR;
         }
 
 
@@ -133,11 +139,12 @@ public class ManagerRequests {
             Log.d("Tag", "responce = " + responce);
             return responce;
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            manager=null;
+            return SYSTEM_ERROR;
         }
 
-        return "null";
     }
 
     public static void writeMessage(DataOutputStream dout, byte[] msg, int msgLen) throws IOException {

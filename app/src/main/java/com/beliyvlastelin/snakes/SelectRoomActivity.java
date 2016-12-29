@@ -93,14 +93,17 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
         @Override
         protected String doInBackground(String... params) {
 
-            HashMap<String, String> map = new HashMap<>();
+           /* HashMap<String, String> map = new HashMap<>();
             ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_ROOM_LIST, map);
             String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
                 roomItems.addAll(ManagerRequests.getListRoom(responce));
             } else {
-            }
+            }*/
+            roomItems.add(new Room("Room1","Admin1",1,3));
+            roomItems.add(new Room("Room2","Admin2",2,3));
+            roomItems.add(new Room("Room3","Admin3",3,3));
 
             return null;
         }
