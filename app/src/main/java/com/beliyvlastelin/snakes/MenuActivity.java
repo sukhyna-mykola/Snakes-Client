@@ -44,7 +44,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     public static final int REQUEST_CODE = 1;
 
     public static String VERSION_CODE;
-    private WebSocketClient mWebSocketClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +52,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_menu);
         readVerionCode();
 
-        connectWebSocket();
 
         loadUserInfo();
+        startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
 
         if (nameStr == null) {
-            //  startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
+              startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
         } else {
-            // new EnterRequest().execute(nameStr, passwordStr);
+             new EnterRequest().execute(nameStr, passwordStr);
         }
 
     }
@@ -137,13 +137,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         protected String doInBackground(String... params) {
-
-            HashMap<String, String> map = new HashMap<>();
-
-            map.put(USER_NAME, params[0]);
-            map.put(USER_PASSWORD, params[1]);
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_SIGNIN, map);
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(params[0],params[1]);
             return ManagerRequests.getSimpleResult(responce);
         }
 
@@ -158,49 +152,5 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void connectWebSocket() {
-        URI uri;
-        try {
-            uri = new URI("ws://10.0.3.2:8080/ws");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
-        }
 
-        mWebSocketClient = new WebSocketClient(uri) {
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                Log.i("Websocket", "Opened");
-                mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
-            }
-
-            @Override
-            public void onMessage(String s) {
-                final String message = s;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MenuActivity.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                Log.i("Websocket", "Closed " + s);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i("Websocket", "Error " + e.getMessage());
-            }
-        };
-        mWebSocketClient.connect();
-    }
-
-    public void sendMessage(View view) {
-
-        mWebSocketClient.send("n");
-
-    }
 }

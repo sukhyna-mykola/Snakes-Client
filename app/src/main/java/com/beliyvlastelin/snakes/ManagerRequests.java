@@ -1,8 +1,11 @@
 package com.beliyvlastelin.snakes;
 
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.beliyvlastelin.snakes.game.GameCell;
 import com.beliyvlastelin.snakes.game.Snake;
@@ -27,10 +30,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import static com.beliyvlastelin.snakes.Constants.COURSE;
 import static com.beliyvlastelin.snakes.Constants.GAME_INFO;
 import static com.beliyvlastelin.snakes.Constants.IS_ADMIN;
 import static com.beliyvlastelin.snakes.Constants.JSON_RESULT;
 import static com.beliyvlastelin.snakes.Constants.MAX_NUMBER_USERS;
+import static com.beliyvlastelin.snakes.Constants.MAX_PERIOD;
+import static com.beliyvlastelin.snakes.Constants.MIN_PERION;
 import static com.beliyvlastelin.snakes.Constants.NUMBER_USERS;
 import static com.beliyvlastelin.snakes.Constants.OTHER_SNAKE;
 import static com.beliyvlastelin.snakes.Constants.RESULT_ERROR;
@@ -40,6 +46,8 @@ import static com.beliyvlastelin.snakes.Constants.ROOM_NAME;
 import static com.beliyvlastelin.snakes.Constants.SNAKE;
 import static com.beliyvlastelin.snakes.Constants.SYSTEM_ERROR;
 import static com.beliyvlastelin.snakes.Constants.USERS;
+import static com.beliyvlastelin.snakes.Constants.USER_NAME;
+import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static com.beliyvlastelin.snakes.Constants.X;
 import static com.beliyvlastelin.snakes.Constants.Y;
 import static com.beliyvlastelin.snakes.Constants.YOUR_SNAKE;
@@ -59,38 +67,46 @@ public class ManagerRequests {
     DataInputStream in;
     DataOutputStream out;
 
+    private static boolean connect;
+
 
     private ManagerRequests(String ip, int port) {
         try {
-            //   Log.d("Tag", "pre");
+            Log.d("Tag", "pre");
             client = new Socket();
             client.setTcpNoDelay(true);
 
-            client.connect(new InetSocketAddress(ip, port),1000);
+            client.connect(new InetSocketAddress(ip, port), 1000);
 
             sin = client.getInputStream();
             sout = client.getOutputStream();
             in = new DataInputStream(new BufferedInputStream(sin));
             out = new DataOutputStream(new BufferedOutputStream(sout));
 
-            //  Log.d("Tag", "after");
+            connect = true;
+            Log.d("Tag", "after");
 
 
         } catch (Exception e) {
             e.printStackTrace();
-           Log.d("Tag", "error");
+            manager = new ManagerRequests();
+            Log.d("Tag", "constructor error");
         }
     }
 
 
-    public static ManagerRequests get(String ip, int port) {
-        if (manager == null && client == null)
+    public static ManagerRequests checkConnect(String ip, int port) {
+        if (!connect) {
+            Log.d("Tag", "connection = false");
             return ManagerRequests.manager = new ManagerRequests(ip, port);
-        else return ManagerRequests.manager;
+        } else {
+            Log.d("Tag", "connection = true");
+            return ManagerRequests.manager;
+        }
     }
 
     public ManagerRequests() {
-
+        Log.d("Tag", "public constructor");
     }
 
     public String sendRequest(String type, HashMap<String, String> param) {
@@ -113,7 +129,7 @@ public class ManagerRequests {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d("Tag", jsonObject.toString());
+
             writeMessage(out, jsonObject.toString().getBytes(), jsonObject.toString().length());
 
             // отсылаем введенную строку текста серверу.
@@ -122,7 +138,8 @@ public class ManagerRequests {
             return RESULT_SUCCESSFUL;
         } catch (Exception e) {
             e.printStackTrace();
-            manager = null;
+            connect = false;
+            Log.d("Tag", "send error");
             return SYSTEM_ERROR;
         }
 
@@ -141,7 +158,8 @@ public class ManagerRequests {
 
         } catch (Exception e) {
             e.printStackTrace();
-            manager=null;
+            Log.d("Tag", "get error");
+            connect = false;
             return SYSTEM_ERROR;
         }
 
@@ -167,8 +185,8 @@ public class ManagerRequests {
             return result;
         } catch (JSONException e) {
             e.printStackTrace();
+            return SYSTEM_ERROR;
         }
-        return RESULT_ERROR;
     }
 
     public static Collection<? extends Room> getListRoom(String JSON) {
@@ -275,5 +293,404 @@ public class ManagerRequests {
 
         return list;
     }
-}
 
+    public String enterRequest(String name, String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USER_NAME, name);
+        map.put(USER_PASSWORD, pass);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+            res = sendRequest(Constants.POST_REQUEST_SIGNIN, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String regRequest(String name, String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(USER_NAME, name);
+        map.put(USER_PASSWORD, pass);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+            res = sendRequest(Constants.POST_REQUEST_CREATEUSER, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String listRoomsRequest(final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_ROOM_LIST, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String joinRoomRequest(String roomName, final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(ROOM_NAME, roomName);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_JOIN_TO_ROOM, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String createRoomRequest(String roomName, final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(ROOM_NAME, roomName);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_CREATE_ROOM, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String exitRoomRequest(final String roomName, final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_EXITFROMROOM, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).joinRoomRequest(roomName, name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String startGameRequest(final String roomName, final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_START_GAME, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).joinRoomRequest(roomName, name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String listUsersRequest(final String roomName, final String name, final String pass) {
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(ROOM_NAME, roomName);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_USER_LIST, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).joinRoomRequest(roomName, name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String startGame(final String roomName, final String name, final String pass) {
+
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).joinRoomRequest(roomName, name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+    public String update() {
+
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+    public String changeCourseRequest(String course, final String roomName, final String name, final String pass) {
+
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put(COURSE, course);
+
+        boolean exec = true;
+        int time = 0;
+        int nextTime = MIN_PERION;
+        String res = new String();
+
+        while (exec && time < MAX_PERIOD) {
+
+            time = nextTime;
+            nextTime = time * 2;
+
+
+            res = sendRequest(Constants.POST_REQUEST_CHANGECOURSE, map);
+            if (!res.equals(SYSTEM_ERROR))
+                res = getResponce();
+
+            if (res.equals(SYSTEM_ERROR)) {
+                final int finalTime = time;
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    public void run() {
+                        Log.d("Tag", "Повтор : " + finalTime + " ms");
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(name, pass);
+                        ManagerRequests.checkConnect(Constants.ip, Constants.port).joinRoomRequest(roomName, name, pass);
+                    }
+                }, finalTime * 1000);
+
+            } else {
+                exec = false;
+                return res;
+            }
+        }
+        return res;
+    }
+
+}

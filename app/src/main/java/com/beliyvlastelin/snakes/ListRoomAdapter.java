@@ -108,11 +108,9 @@ public class ListRoomAdapter extends RecyclerView.Adapter<ListRoomAdapter.RoomVi
         @Override
         protected String doInBackground(String... params) {
             roomName = params[0];
-            HashMap<String, String> map = new HashMap<>();
-            map.put(ROOM_NAME, roomName);
 
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_JOIN_TO_ROOM, map);
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce =  ManagerRequests.checkConnect(Constants.ip, Constants.port)
+                    .joinRoomRequest(roomName,MenuActivity.nameStr,MenuActivity.passwordStr);
 
             return ManagerRequests.getSimpleResult(responce);
 

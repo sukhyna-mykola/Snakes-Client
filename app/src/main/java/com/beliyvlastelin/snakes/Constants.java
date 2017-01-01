@@ -66,7 +66,7 @@ public class Constants {
 
 
     public static final int MAX_PERIOD = 600;
-    public static final String MIN_PERION = "10";
+    public static final int MIN_PERION = 10;
 
 
 }

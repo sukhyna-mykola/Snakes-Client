@@ -80,13 +80,7 @@ public class RegFragment extends DialogFragment implements View.OnClickListener 
             nameStr = params[0];
             passwordStr = params[1];
 
-            HashMap<String, String> map = new HashMap<>();
-
-            map.put(USER_NAME,nameStr );
-            map.put(USER_PASSWORD, passwordStr);
-
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_CREATEUSER, map);
-            String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).regRequest(nameStr,passwordStr);
             return ManagerRequests.getSimpleResult(responce);
 
         }

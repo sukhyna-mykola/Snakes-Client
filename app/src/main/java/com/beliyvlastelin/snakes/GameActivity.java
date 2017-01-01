@@ -98,12 +98,8 @@ public class GameActivity extends AppCompatActivity implements SimpleGestureFilt
         @Override
         protected String doInBackground(String... params) {
 
-            HashMap<String, String> map = new HashMap<>();
 
-            map.put(COURSE, params[0]);
-            Log.d("Tag","course = "+params[0]);
-
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_CHANGECOURSE, map);
+            ManagerRequests.checkConnect(Constants.ip, Constants.port).changeCourseRequest(params[0],RoomActivity.nameRoom,MenuActivity.nameStr,MenuActivity.passwordStr);
             //String responce =  ManagerRequests.get(Constants.ip, Constants.port).getResponce();
             return RESULT_SUCCESSFUL;
         }

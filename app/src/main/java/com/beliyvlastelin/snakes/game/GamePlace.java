@@ -1,5 +1,8 @@
 package com.beliyvlastelin.snakes.game;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.beliyvlastelin.snakes.Constants;
 import com.beliyvlastelin.snakes.ManagerRequests;
 
@@ -47,9 +50,10 @@ public class GamePlace {
         mGameCells = gameCells;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void update() {
         mSnakes.clear();
-        String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+        String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).update();
 
         mSnakes = (ArrayList<Snake>) ManagerRequests.getSnakesCoordinates(responce);
         mGameCells = new GameCell[width][height];

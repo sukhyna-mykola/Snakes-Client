@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_enter: {
                 nameStr = name.getText().toString();
                 passwordStr = password.getText().toString();
-                new EnterRequest().execute(nameStr, passwordStr, MIN_PERION);
+                new EnterRequest().execute(nameStr, passwordStr);
                 break;
             }
         }
@@ -78,32 +79,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.name.setText(nameStr);
         this.password.setText(passwordStr);
 
-        new EnterRequest().execute(nameStr, passwordStr, MIN_PERION);
+        new EnterRequest().execute(nameStr, passwordStr);
     }
 
 
     private class EnterRequest extends AsyncTask<String, Void, String> {
-        private int curTime;
-        private int nextTime;
+
 
         @Override
         protected String doInBackground(String... params) {
-
-            curTime = Integer.parseInt(params[2]);
-            nextTime *= 2;
-
-
-            HashMap<String, String> map = new HashMap<>();
-
-            map.put(USER_NAME, params[0]);
-            map.put(USER_PASSWORD, params[1]);
-            try {
-                ManagerRequests.get(Constants.ip, Constants.port)
-                        .sendRequest(Constants.POST_REQUEST_SIGNIN, map);
-            } catch (Exception e) {
-                return SYSTEM_ERROR;
-            }
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).enterRequest(params[0],params[1]);
             return ManagerRequests.getSimpleResult(responce);
         }
 
@@ -116,17 +101,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra(USER_NAME_KEY, nameStr);
                 setResult(RESULT_OK, intent);
                 finish();
-            } else if (s.equals(RESULT_ERROR)) {
-                Toast.makeText(LoginActivity.this, RESULT_ERROR, Toast.LENGTH_SHORT).show();
-            } else {
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        if (curTime < MAX_PERIOD) {
-                            new EnterRequest().execute(nameStr, passwordStr, String.valueOf(nextTime));
-                            Toast.makeText(LoginActivity.this, "період = " + curTime, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }, curTime);
+            }else {
+                Toast.makeText(LoginActivity.this, "Помилка", Toast.LENGTH_SHORT).show();
             }
 
         }

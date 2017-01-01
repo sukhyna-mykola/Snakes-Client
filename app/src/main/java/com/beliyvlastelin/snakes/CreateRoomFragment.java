@@ -73,14 +73,10 @@ public class CreateRoomFragment extends DialogFragment implements View.OnClickLi
         @Override
         protected String doInBackground(String... params) {
 
-            HashMap<String, String> map = new HashMap<>();
-
             roomName = params[0];
 
-            map.put(ROOM_NAME, roomName);
-
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_CREATE_ROOM, map);
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port)
+                    .createRoomRequest(roomName,MenuActivity.nameStr,MenuActivity.passwordStr);
 
             return ManagerRequests.getSimpleResult(responce);
         }

@@ -27,7 +27,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
 
     private RecyclerView listPlayer;
     private List<User> mUsers = new ArrayList<>();
-    private String nameRoom;
+    public  static  String nameRoom;
     private CustomFontTextView nameRoomTextView;
     private SwipeRefreshLayout refreshLayout;
 
@@ -37,7 +37,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
         setContentView(R.layout.activity_room);
         listPlayer = (RecyclerView) findViewById(R.id.list_of_players);
         nameRoom = getIntent().getStringExtra(ROOM_NAME_KEY);
-        nameRoom = "ROOM";
+
         nameRoomTextView = (CustomFontTextView) findViewById(R.id.name_room);
         nameRoomTextView.setText(nameRoom);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_romm);
@@ -103,12 +103,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
         @Override
         protected String doInBackground(String... params) {
 
-            HashMap<String, String> map = new HashMap<>();
-
-            map.put(ROOM_NAME, params[0]);
-
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_USER_LIST, map);
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).listUsersRequest(nameRoom,MenuActivity.nameStr,MenuActivity.passwordStr);
 
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
@@ -145,8 +140,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
 
         @Override
         protected Void doInBackground(String... params) {
-            HashMap<String, String> map = new HashMap<>();
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_START_GAME, map);
+            ManagerRequests.checkConnect(Constants.ip, Constants.port).startGameRequest(nameRoom,MenuActivity.nameStr,MenuActivity.passwordStr);
             return null;
         }
 
@@ -164,7 +158,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
 
         @Override
         protected String doInBackground(Void... params) {
-            String responce = ManagerRequests.get(Constants.ip, Constants.port).getResponce();
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).startGame(nameRoom,MenuActivity.nameStr,MenuActivity.passwordStr);
             return ManagerRequests.getSimpleResult(responce);
         }
 
@@ -188,8 +182,7 @@ public class RoomActivity extends Activity implements View.OnClickListener,Swipe
 
         @Override
         protected Void doInBackground(String... params) {
-            HashMap<String, String> map = new HashMap<>();
-            ManagerRequests.get(Constants.ip, Constants.port).sendRequest(Constants.POST_REQUEST_EXITFROMROOM, map);
+            ManagerRequests.checkConnect(Constants.ip, Constants.port).exitRoomRequest(nameRoom,MenuActivity.nameStr,MenuActivity.passwordStr);
             return null;
         }
 
