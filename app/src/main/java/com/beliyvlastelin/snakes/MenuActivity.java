@@ -54,12 +54,12 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
 
         loadUserInfo();
-        startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
+        //startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
 
         if (nameStr == null) {
-              startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
+             startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE);
         } else {
-             new EnterRequest().execute(nameStr, passwordStr);
+             //new EnterRequest().execute(nameStr, passwordStr);
         }
 
     }

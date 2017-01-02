@@ -18,7 +18,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private Game mGame;
     private Paint p;
-    DrawThread drawThread;
 
     public GameSurface(Context context, Game game) {
         super(context);
@@ -30,9 +29,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        drawThread = new DrawThread(holder);
-        drawThread.setRunning(true);
-        //drawThread.start();
         new Update().execute();
     }
 
@@ -43,49 +39,10 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        drawThread.setRunning(false);
-        while (retry) {
-            try {
-                drawThread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-            }
-        }
+
     }
 
-    class DrawThread extends Thread {
 
-        private boolean running = false;
-        private SurfaceHolder surfaceHolder;
-
-        public DrawThread(SurfaceHolder surfaceHolder) {
-            this.surfaceHolder = surfaceHolder;
-        }
-
-        public void setRunning(boolean running) {
-            this.running = running;
-        }
-
-        @Override
-        public void run() {
-            Canvas canvas;
-            while (running) {
-                canvas = null;
-                try {
-                    canvas = surfaceHolder.lockCanvas(null);
-                    if (canvas == null)
-                        continue;
-                    drawGame(canvas);
-                } finally {
-                    if (canvas != null) {
-                        surfaceHolder.unlockCanvasAndPost(canvas);
-                    }
-                }
-
-            }
-        }
-    }
 
     public void draw() {
 
@@ -144,18 +101,22 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    public class Update extends AsyncTask<Void, Void, Void> {
+    public class Update extends AsyncTask<Void, Void, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... params) {
-            mGame.update();
-            return null;
+        protected Boolean doInBackground(Void... params) {
+
+            return mGame.update();
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            draw();
-            new Update().execute();
+        protected void onPostExecute(Boolean aVoid) {
+            if (aVoid) {
+                draw();
+                new Update().execute();
+            } else {
+
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
         setContentView(R.layout.activity_select_room);
         listRoom = (RecyclerView) findViewById(R.id.list_of_room);
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_select_romm);
-        refreshLayout.setColorSchemeColors(Color.GREEN,Color.RED,Color.YELLOW,Color.BLUE);
+        refreshLayout.setColorSchemeColors(Color.GREEN, Color.RED, Color.YELLOW, Color.BLUE);
         refreshLayout.setOnRefreshListener(this);
         listRoom.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -93,9 +93,7 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
         @Override
         protected String doInBackground(String... params) {
 
-
-
-            String responce =   ManagerRequests.checkConnect(Constants.ip, Constants.port).listRoomsRequest(MenuActivity.nameStr,MenuActivity.passwordStr);
+            String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).listRoomsRequest(MenuActivity.nameStr, MenuActivity.passwordStr);
             String result = ManagerRequests.getSimpleResult(responce);
             if (result.equals(RESULT_SUCCESSFUL)) {
                 roomItems.addAll(ManagerRequests.getListRoom(responce));

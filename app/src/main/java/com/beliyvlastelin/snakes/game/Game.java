@@ -47,8 +47,8 @@ public class Game {
         mGamePlace = gamePlace;
     }
 
-    public void update(){
-        mGamePlace.update();
+    public boolean update(){
+       return mGamePlace.update();
 
     }
 }

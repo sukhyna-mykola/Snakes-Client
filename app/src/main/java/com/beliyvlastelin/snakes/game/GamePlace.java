@@ -51,12 +51,14 @@ public class GamePlace {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void update() {
+    public boolean update() {
         mSnakes.clear();
         String responce = ManagerRequests.checkConnect(Constants.ip, Constants.port).update();
 
         mSnakes = (ArrayList<Snake>) ManagerRequests.getSnakesCoordinates(responce);
         mGameCells = new GameCell[width][height];
+        if (mSnakes.size() == 0)
+            return false;
 
         for (Snake snake : mSnakes) {
             putCell(snake.getHead());
@@ -76,7 +78,7 @@ public class GamePlace {
             }
         }
 
-
+        return true;
     }
 
     public void putCell(GameCell cell) {
