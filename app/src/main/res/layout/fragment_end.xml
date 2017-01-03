@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.beliyvlastelin.snakes.CustomFontTextView
+        android:text="@string/next_action"
+        android:id="@+id/status_reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/small_dimens"/>
+
+    <com.beliyvlastelin.snakes.CustomFontButton
+        style="@style/button_style"
+        android:background="@drawable/background_btn_blue"
+        android:id="@+id/see_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/see"/>
+    <com.beliyvlastelin.snakes.CustomFontButton
+        style="@style/button_style"
+        android:background="@drawable/background_btn_blue"
+        android:id="@+id/exit_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/exit_text"/>
+</LinearLayout>

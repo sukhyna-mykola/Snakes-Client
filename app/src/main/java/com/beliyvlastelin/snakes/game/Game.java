@@ -47,6 +47,10 @@ public class Game {
         mGamePlace = gamePlace;
     }
 
+    public GamePlace getmGamePlace() {
+        return mGamePlace;
+    }
+
     public boolean update(){
        return mGamePlace.update();
 

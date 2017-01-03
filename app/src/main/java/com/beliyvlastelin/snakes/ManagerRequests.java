@@ -34,6 +34,7 @@ import static com.beliyvlastelin.snakes.Constants.COURSE;
 import static com.beliyvlastelin.snakes.Constants.DEAD;
 import static com.beliyvlastelin.snakes.Constants.GAME_INFO;
 import static com.beliyvlastelin.snakes.Constants.GAME_OVER;
+import static com.beliyvlastelin.snakes.Constants.GAMING;
 import static com.beliyvlastelin.snakes.Constants.IS_ADMIN;
 import static com.beliyvlastelin.snakes.Constants.JSON_RESULT;
 import static com.beliyvlastelin.snakes.Constants.MAX_NUMBER_USERS;
@@ -246,7 +247,7 @@ public class ManagerRequests {
 
             Snake mSnake = new Snake();
             ArrayList<GameCell> mSnakeCells = new ArrayList<>();
-            if (!info.equals(GAME_OVER)) {
+
 
                 if (!info.equals(DEAD)) {
                     JSONArray yourSnake = jsonObject.getJSONArray(YOUR_SNAKE);
@@ -293,7 +294,7 @@ public class ManagerRequests {
                     mSnake.setBody(mSnakeCells);
                     list.add(mSnake);
                 }
-            }
+
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -302,7 +303,16 @@ public class ManagerRequests {
         return list;
     }
 
+    public static String getStatusGame(String JSON) {
 
+        try {
+            JSONObject jsonObject = new JSONObject(JSON);
+            return jsonObject.getString(GAME_INFO);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return GAMING;
+    }
     private String simpleEnterRequest(String name, String pass) {
         HashMap<String, String> map = new HashMap<>();
         map.put(USER_NAME, name);
@@ -745,5 +755,6 @@ public class ManagerRequests {
         }
         return res;
     }
+
 
 }

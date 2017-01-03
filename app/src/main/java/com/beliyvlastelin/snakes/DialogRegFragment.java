@@ -25,7 +25,7 @@ import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
  * Created by mikola on 05.12.2016.
  */
 
-public class RegFragment extends DialogFragment implements View.OnClickListener {
+public class DialogRegFragment extends DialogFragment implements View.OnClickListener {
     private EditText name;
     private EditText password;
     private CustomFontTextView statusReg;

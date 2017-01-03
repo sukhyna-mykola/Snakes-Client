@@ -1,6 +1,5 @@
 package com.beliyvlastelin.snakes;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -9,23 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
-import static com.beliyvlastelin.snakes.Constants.ROOM_NAME;
-import static com.beliyvlastelin.snakes.Constants.USER_NAME;
-import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static com.beliyvlastelin.snakes.Constants.WAIT_DIALOG_TAG;
 
-public class SelectRoomActivity extends AppCompatActivity implements CreateRoomFragment.Callbacks, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class SelectRoomActivity extends AppCompatActivity implements DialogCreateRoomFragment.Callbacks, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView listRoom;
     private List<Room> roomItems = new ArrayList<>();
     private SwipeRefreshLayout refreshLayout;
@@ -73,7 +64,7 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
                 break;
 
             case R.id.create_room_select_room:
-                getSupportFragmentManager().beginTransaction().add(new CreateRoomFragment(), "CreateRoomDialog").commit();
+                getSupportFragmentManager().beginTransaction().add(new DialogCreateRoomFragment(), "CreateRoomDialog").commit();
                 break;
         }
 
@@ -114,7 +105,7 @@ public class SelectRoomActivity extends AppCompatActivity implements CreateRoomF
     public void dismissDialog() {
         Fragment prev = getSupportFragmentManager().findFragmentByTag(WAIT_DIALOG_TAG);
         if (prev != null) {
-            WaitFragment df = (WaitFragment) prev;
+            DialogWaitFragment df = (DialogWaitFragment) prev;
             df.dismiss();
         }
     }

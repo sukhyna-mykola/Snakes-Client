@@ -30,6 +30,8 @@ import static com.beliyvlastelin.snakes.Constants.USER_NAME_KEY;
 import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 
 public class GameActivity extends AppCompatActivity implements SimpleGestureFilter.SimpleGestureListener {
+
+
     private FrameLayout frame;
     private GameSurface mGameSurface;
     private Game mGame;

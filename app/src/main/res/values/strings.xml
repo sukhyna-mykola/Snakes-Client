@@ -23,4 +23,6 @@
     <string name="version_text">Версiя</string>
     <string name="exit_text">Вихiд</string>
     <string name="sett_text">Налаштування</string>
+    <string name="next_action">Подальшi дii</string>
+    <string name="see">Дивитися</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.beliyvlastelin.snakes.game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,12 @@ import android.os.AsyncTask;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.beliyvlastelin.snakes.DialogEndGameFragment;
+import com.beliyvlastelin.snakes.GameActivity;
+import com.beliyvlastelin.snakes.RoomActivity;
+
+import static com.beliyvlastelin.snakes.Constants.ROOM_NAME_KEY;
+
 /**
  * Created by mikola on 01.12.2016.
  */
@@ -18,11 +25,13 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
 
     private Game mGame;
     private Paint p;
+    private GameActivity gameActivity;
 
     public GameSurface(Context context, Game game) {
         super(context);
         getHolder().addCallback(this);
         this.mGame = game;
+        this.gameActivity = (GameActivity) context;
         p = new Paint();
     }
 
@@ -41,7 +50,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
-
 
 
     public void draw() {
@@ -101,24 +109,33 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 
-    public class Update extends AsyncTask<Void, Void, Boolean> {
+    public class Update extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-
-            return mGame.update();
+        protected Void doInBackground(Void... params) {
+            mGame.update();
+            return null;
         }
 
         @Override
-        protected void onPostExecute(Boolean aVoid) {
-            if (aVoid) {
+        protected void onPostExecute(Void aVoid) {
+            mGame.getGamePlace().setDead(true);
+            if (!mGame.getGamePlace().isGameOver()) {
+                if(mGame.getGamePlace().isDead()){
+                    if(DialogEndGameFragment.showFirst){
+                        gameActivity.getSupportFragmentManager().beginTransaction()
+                                .add(new DialogEndGameFragment(),"DialogEndGameFragment").commit();
+                    }
+                }
                 draw();
                 new Update().execute();
             } else {
-
+                Intent intent = new Intent(gameActivity, RoomActivity.class);
+                intent.putExtra(ROOM_NAME_KEY, RoomActivity.nameRoom);
+                gameActivity.startActivity(intent);
             }
+
         }
     }
 }
-
 

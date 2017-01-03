@@ -10,21 +10,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
-import java.util.HashMap;
 
 import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
-import static com.beliyvlastelin.snakes.Constants.ROOM_NAME;
 import static com.beliyvlastelin.snakes.Constants.ROOM_NAME_KEY;
 
 /**
  * Created by mikola on 05.12.2016.
  */
 
-public class CreateRoomFragment extends DialogFragment implements View.OnClickListener {
+public class DialogCreateRoomFragment extends DialogFragment implements View.OnClickListener {
     private EditText nameRoom;
     private CustomFontTextView statusReg;
     private CustomFontButton reg;
@@ -44,7 +39,7 @@ public class CreateRoomFragment extends DialogFragment implements View.OnClickLi
                 .setView(v).create();
     }
 
-    private CreateRoomFragment.Callbacks mCallbacks;
+    private DialogCreateRoomFragment.Callbacks mCallbacks;
 
     public interface Callbacks {
         void setUpdateListRoom();

@@ -24,7 +24,7 @@ import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
  * Created by mikola on 05.12.2016.
  */
 
-public class WaitFragment extends DialogFragment  {
+public class DialogWaitFragment extends DialogFragment  {
 
 
     @NonNull

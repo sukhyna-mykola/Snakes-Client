@@ -3,29 +3,18 @@ package com.beliyvlastelin.snakes;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.HashMap;
-
-import static com.beliyvlastelin.snakes.Constants.MAX_PERIOD;
-import static com.beliyvlastelin.snakes.Constants.MIN_PERION;
-import static com.beliyvlastelin.snakes.Constants.RESULT_ERROR;
 import static com.beliyvlastelin.snakes.Constants.RESULT_SUCCESSFUL;
-import static com.beliyvlastelin.snakes.Constants.SYSTEM_ERROR;
-import static com.beliyvlastelin.snakes.Constants.USER_NAME;
 import static com.beliyvlastelin.snakes.Constants.USER_NAME_KEY;
-import static com.beliyvlastelin.snakes.Constants.USER_PASSWORD;
 import static com.beliyvlastelin.snakes.Constants.WAIT_DIALOG_TAG;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, RegFragment.Callbacks {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, DialogRegFragment.Callbacks {
     private EditText name;
     private EditText password;
 
@@ -57,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.login_reg: {
-                getSupportFragmentManager().beginTransaction().add(new RegFragment(), "RegDialog").commit();
+                getSupportFragmentManager().beginTransaction().add(new DialogRegFragment(), "RegDialog").commit();
                 break;
             }
 
@@ -111,7 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void dismissDialog() {
         Fragment prev = getSupportFragmentManager().findFragmentByTag(WAIT_DIALOG_TAG);
         if (prev != null) {
-            WaitFragment df = (WaitFragment) prev;
+            DialogWaitFragment df = (DialogWaitFragment) prev;
             df.dismiss();
         }
     }
